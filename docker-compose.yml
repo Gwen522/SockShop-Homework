@@ -1,0 +1,184 @@
+# SockShop 微服务系统 - 适配 Apple 芯片 (arm64) 的 docker-compose 编排文件
+# 改动说明:
+#   1. 所有镜像统一指定 platform: linux/amd64,由 Docker Desktop 自动模拟运行
+#   2. 直接暴露 front-end 容器的 8079 端口对外访问 (绕过老版 edge-router 的重定向死循环 bug)
+#      访问地址: http://localhost:8079
+#   3. 移除官方自带的 user-sim 持续压测容器,避免干扰我们自己的 Selenium/JMeter 测试
+#   4. 移除有缺陷的 edge-router (Traefik) 容器, front-end 自身已能直接对外提供完整服务
+#   5. 补充 MYSQL_ROOT_PASSWORD 默认值
+
+services:
+  front-end:
+    image: weaveworksdemos/front-end:0.3.12
+    platform: linux/amd64
+    hostname: front-end
+    restart: always
+    ports:
+      - '8079:8079'
+    cap_drop:
+      - all
+    read_only: true
+
+  catalogue:
+    image: weaveworksdemos/catalogue:0.3.5
+    platform: linux/amd64
+    hostname: catalogue
+    restart: always
+    cap_drop:
+      - all
+    cap_add:
+      - NET_BIND_SERVICE
+    read_only: true
+
+  catalogue-db:
+    image: weaveworksdemos/catalogue-db:0.3.0
+    platform: linux/amd64
+    hostname: catalogue-db
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=fake_password
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_DATABASE=socksdb
+
+  carts:
+    image: weaveworksdemos/carts:0.4.8
+    platform: linux/amd64
+    hostname: carts
+    restart: always
+    cap_drop:
+      - all
+    cap_add:
+      - NET_BIND_SERVICE
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid
+    environment:
+      - JAVA_OPTS=-Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom -Dspring.zipkin.enabled=false
+
+  carts-db:
+    image: mongo:3.4
+    platform: linux/amd64
+    hostname: carts-db
+    restart: always
+    cap_drop:
+      - all
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid
+
+  orders:
+    image: weaveworksdemos/orders:0.4.7
+    platform: linux/amd64
+    hostname: orders
+    restart: always
+    cap_drop:
+      - all
+    cap_add:
+      - NET_BIND_SERVICE
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid
+    environment:
+      - JAVA_OPTS=-Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom -Dspring.zipkin.enabled=false
+
+  orders-db:
+    image: mongo:3.4
+    platform: linux/amd64
+    hostname: orders-db
+    restart: always
+    cap_drop:
+      - all
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid
+
+  shipping:
+    image: weaveworksdemos/shipping:0.4.8
+    platform: linux/amd64
+    hostname: shipping
+    restart: always
+    cap_drop:
+      - all
+    cap_add:
+      - NET_BIND_SERVICE
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid
+    environment:
+      - JAVA_OPTS=-Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom -Dspring.zipkin.enabled=false
+
+  queue-master:
+    image: weaveworksdemos/queue-master:0.3.1
+    platform: linux/amd64
+    hostname: queue-master
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    cap_drop:
+      - all
+    cap_add:
+      - NET_BIND_SERVICE
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid
+
+  rabbitmq:
+    image: rabbitmq:3.6.8
+    platform: linux/amd64
+    hostname: rabbitmq
+    restart: always
+    cap_drop:
+      - all
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE
+    read_only: true
+
+  payment:
+    image: weaveworksdemos/payment:0.4.3
+    platform: linux/amd64
+    hostname: payment
+    restart: always
+    cap_drop:
+      - all
+    cap_add:
+      - NET_BIND_SERVICE
+    read_only: true
+
+  user:
+    image: weaveworksdemos/user:0.4.4
+    platform: linux/amd64
+    hostname: user
+    restart: always
+    cap_drop:
+      - all
+    cap_add:
+      - NET_BIND_SERVICE
+    read_only: true
+    environment:
+      - MONGO_HOST=user-db:27017
+
+  user-db:
+    image: weaveworksdemos/user-db:0.4.0
+    platform: linux/amd64
+    hostname: user-db
+    restart: always
+    cap_drop:
+      - all
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid

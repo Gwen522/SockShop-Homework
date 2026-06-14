@@ -1,0 +1,94 @@
+{
+  "browser": "chrome",
+  "timestamp": "2026-06-14T08:38:47",
+  "total": 8,
+  "passed": 8,
+  "failed": 0,
+  "warn": 0,
+  "avg_page_load_ms": 168,
+  "max_page_load_ms": 867,
+  "avg_action_ms": 2766,
+  "test_user": "seltest_376ybh",
+  "cases": [
+    {
+      "id": "TC01",
+      "name": "首页加载与渲染",
+      "status": "PASS",
+      "page_load_ms": 867,
+      "action_ms": null,
+      "detail": "标题='WeaveSocks', 首页商品图 15 张",
+      "screenshot": "tc01_homepage.png",
+      "time": "08:38:21"
+    },
+    {
+      "id": "TC02",
+      "name": "浏览商品目录",
+      "status": "PASS",
+      "page_load_ms": 27,
+      "action_ms": null,
+      "detail": "目录页商品图 12 张",
+      "screenshot": "tc02_catalogue.png",
+      "time": "08:38:24"
+    },
+    {
+      "id": "TC03",
+      "name": "查看商品详情",
+      "status": "PASS",
+      "page_load_ms": 24,
+      "action_ms": null,
+      "detail": "商品='Holy', 价格=$99.99",
+      "screenshot": "tc03_detail.png",
+      "time": "08:38:25"
+    },
+    {
+      "id": "TC04",
+      "name": "用户注册",
+      "status": "PASS",
+      "page_load_ms": 41,
+      "action_ms": 3034,
+      "detail": "注册 seltest_376ybh, URL=customer-orders.html, cookies=['md.sid']",
+      "screenshot": "tc04_register_done.png",
+      "time": "08:38:31"
+    },
+    {
+      "id": "TC05",
+      "name": "用户登录",
+      "status": "PASS",
+      "page_load_ms": 28,
+      "action_ms": 3019,
+      "detail": "登录后 URL=customer-orders.html, cookies=['md.sid']",
+      "screenshot": "tc05_login_done.png",
+      "time": "08:38:36"
+    },
+    {
+      "id": "TC06",
+      "name": "加入购物车",
+      "status": "PASS",
+      "page_load_ms": null,
+      "action_ms": 2006,
+      "detail": "点击加购成功, 购物车显示='0 items in cart'",
+      "screenshot": "tc06_add_cart.png",
+      "time": "08:38:39"
+    },
+    {
+      "id": "TC07",
+      "name": "查看购物车",
+      "status": "PASS",
+      "page_load_ms": 24,
+      "action_ms": null,
+      "detail": "购物车页面行数=6",
+      "screenshot": "tc07_basket.png",
+      "time": "08:38:42"
+    },
+    {
+      "id": "TC08",
+      "name": "下单结账",
+      "status": "PASS",
+      "page_load_ms": null,
+      "action_ms": 3006,
+      "detail": "已触发下单操作",
+      "screenshot": "tc08_checkout.png",
+      "time": "08:38:47"
+    }
+  ]
+}

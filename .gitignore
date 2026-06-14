@@ -1,0 +1,16 @@
+# JMeter 运行产生的中间结果
+jmeter/gradient/*.jtl
+jmeter/results.jtl
+jmeter/html_report/
+*.jtl
+*.log
+
+# JMeter 工具本体太大, 不传(运行时各自下载/安装)
+tools/
+
+# Python 缓存
+__pycache__/
+*.pyc
+
+# 系统文件
+.DS_Store
